@@ -13,7 +13,7 @@ spten_t = th.sparse.FloatTensor
 
 
 def poincare_grad(p, d_p):
-    r"""
+    """
     Function to compute Riemannian gradient from the
     Euclidean gradient in the Poincaré ball.
 
@@ -43,7 +43,7 @@ def euclidean_retraction(p, d_p, lr):
 
 
 class RiemannianSGD(Optimizer):
-    r"""Riemannian stochastic gradient descent.
+    """Riemannian stochastic gradient descent.
 
     Args:
         params (iterable): iterable of parameters to optimize or dicts defining
@@ -66,7 +66,7 @@ class RiemannianSGD(Optimizer):
     def step(self, lr=None):
         """Performs a single optimization step.
 
-        Arguments:
+        Args:
             lr (float, optional): learning rate for the current update.
         """
         loss = None

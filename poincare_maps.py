@@ -42,7 +42,8 @@ colors_palette = ['#1F77B4', '#FF7F0E', '#2CA02C', '#D62728', '#9467BD',
 #                   '#41b6c4', '#1d91c0', '#225ea8', '#253494', '#081d58']
 
 def plot_poincare_disc(x, labels=None, title_name=None,
-    labels_name='labels', labels_order=None, labels_pos=None, labels_text=None,
+                       labels_name='labels', labels_order=None,
+                       labels_pos=None, labels_text=None,
                        file_name=None, coldict=None,
                        d1=4.5, d2=4.0, fs=9, ms=20,
                        u=None, v=None, alpha=1.0,
@@ -73,7 +74,8 @@ def plot_poincare_disc(x, labels=None, title_name=None,
                         data=df, ax=ax, s=ms)
         
         if leg:
-            ax.legend(fontsize=fs, loc='outside', bbox_to_anchor=bbox, facecolor='white')
+            ax.legend(fontsize=fs, loc='outside', bbox_to_anchor=bbox,
+                      facecolor='white')
         else:
             ax.legend_.remove()
             
@@ -86,7 +88,8 @@ def plot_poincare_disc(x, labels=None, title_name=None,
 
     if not (u is None):     
         a, b = get_geodesic_parameters(u, v)        
-        circle_geo = plt.Circle((-a/2, -b/2), radius=np.sqrt(a**2/4 + b**2/4 - 1),  fc='none', color='grey')
+        circle_geo = plt.Circle((-a/2, -b/2), radius=np.sqrt(a**2/4 + b**2/4 - 1),
+                                fc='none', color='grey')
         ax.add_patch(circle_geo)
 
     fig.tight_layout()
@@ -150,9 +153,10 @@ class PoincareMaps:
         self.coordinates_rotated = poincare_translation(-self.coordinates[self.iroot, :], self.coordinates)     
 
     def plot(self, pm_type='ori', labels=None, 
-        labels_name='labels', print_labels=True, labels_text=None,
-        labels_order=None, coldict=None, file_name=None, title_name=None, alpha=1.0,
-        zoom=None, show=True, d1=4.5, d2=4.0, fs=9, ms=20, bbox=(1.3, 0.7), u=None, v=None, leg=True, ft='pdf'):                            
+             labels_name='labels', print_labels=True, labels_text=None,
+             labels_order=None, coldict=None, file_name=None, title_name=None,
+             alpha=1.0, zoom=None, show=True, d1=4.5, d2=4.0, fs=9, ms=20,
+             bbox=(1.3, 0.7), u=None, v=None, leg=True, ft='pdf'):                            
         if pm_type == 'ori':
             coordinates = self.coordinates
         
@@ -173,14 +177,21 @@ class PoincareMaps:
                 coordinates[np.isnan(coordinates)] = 0
                 labels = labels[idx_zoom]
 
-        
+         
         self.labels_pos = plot_poincare_disc(coordinates, title_name=title_name, 
-            print_labels=print_labels, labels_text=labels_text,
-            labels=labels, labels_name=labels_name, labels_order=labels_order, labels_pos = self.labels_pos,
-                       file_name=file_name, coldict=coldict, u=u, v=v, alpha=alpha,
-                       d1=d1, d2=d2, fs=fs, ms=ms, col_palette=self.colors_palette, bbox=bbox, leg=leg, ft=ft)
+                                             print_labels=print_labels,
+                                             labels_text=labels_text,
+                                             labels=labels, labels_name=labels_name,
+                                             labels_order=labels_order,
+                                             labels_pos = self.labels_pos,
+                                             file_name=file_name, coldict=coldict,
+                                             u=u, v=v, alpha=alpha, d1=d1, d2=d2,
+                                             fs=fs, ms=ms,
+                                             col_palette=self.colors_palette,
+                                             bbox=bbox, leg=leg, ft=ft)
 
-    def detect_lineages(self, n_lin=2, clustering_name='spectral', k=15, rotated=False):
+    def detect_lineages(self, n_lin=2, clustering_name='spectral',
+                        k=15, rotated=False):
         pc_proj = []
 
         if rotated:
@@ -192,7 +203,10 @@ class PoincareMaps:
             pc_proj.append(get_projected_coordinates(x[i]))
         
         if clustering_name == 'spectral':
-            clustering = SpectralClustering(n_clusters=n_lin, eigen_solver='arpack', affinity="nearest_neighbors", n_neighbors=k).fit(pc_proj)      
+            clustering = SpectralClustering(n_clusters=n_lin,
+                                            eigen_solver='arpack',
+                                            affinity="nearest_neighbors",
+                                            n_neighbors=k).fit(pc_proj)      
         elif clustering_name == 'dbs':
             clustering = DBSCAN(eps=1/180, min_samples=10).fit(pc_proj)
         elif clustering_name == 'kmeans':
@@ -205,14 +219,21 @@ class PoincareMaps:
     def detect_cluster(self, n_clusters=2, clustering_name='spectral', k=15):
         if clustering_name == 'spectral':
             similarity = np.exp(-self.distances**2)
-            clustering = SpectralClustering(n_clusters=n_clusters, eigen_solver='arpack', affinity='precomputed', n_neighbors=k).fit(similarity)
+            clustering = SpectralClustering(n_clusters=n_clusters,
+                                            eigen_solver='arpack',
+                                            affinity='precomputed',
+                                            n_neighbors=k).fit(similarity)
         else:
-            clustering = AgglomerativeClustering(linkage='average', n_clusters=n_clusters, affinity='precomputed').fit(self.distances**2)
+            clustering = AgglomerativeClustering(linkage='average',
+                                                 n_clusters=n_clusters,
+                                                 affinity='precomputed').fit(self.distances**2)
 
         self.clusters = clustering.labels_
 
 
-    def plot_distances(self, cell=None, pm_type='rot', ss=10, eps=4.0, file_name=None, title_name=None, idx_zoom=None, show=False, fs=8, ms=3):
+    def plot_distances(self, cell=None, pm_type='rot', ss=10, eps=4.0,
+                       file_name=None, title_name=None, idx_zoom=None,
+                       show=False, fs=8, ms=3):
         if cell is None:
             cell = self.iroot
             
@@ -251,7 +272,8 @@ class PoincareMaps:
         plt.close(fig)
 
 
-    def plot_distances_between_clusters(self, labels, pm_type='rot', eps = 4.0, file_name=None, fs=9):
+    def plot_distances_between_clusters(self, labels, pm_type='rot', eps = 4.0,
+                                        file_name=None, fs=9):
         if pm_type == 'ori':
             poincare_coord = self.coordinates
         elif pm_type == 'rot':
@@ -284,15 +306,20 @@ class PoincareMaps:
 
                     mycmap = self.distances[cell]
 
-                    circle = plt.Circle((0, 0), radius=1, color='black', fc="None")
+                    circle = plt.Circle((0, 0), radius=1,
+                                        color='black', fc="None")
                     axs[i, j].add_patch(circle)
                     axs[i, j].axis('off')
                     axs[i, j].axis('equal')
                     axs[i, j].plot(0, 0, 'x', c=(0, 0, 0), ms=6)
                     cm = plt.cm.get_cmap('rainbow')
-                    sc = axs[i, j].scatter(poincare_coord[:, 0], poincare_coord[:, 1], c=mycmap, s=15, cmap=cm)    
+                    sc = axs[i, j].scatter(poincare_coord[:, 0],
+                                           poincare_coord[:, 1],
+                                           c=mycmap, s=15, cmap=cm)    
                     axs[i, j].set_title(cell_list[l], fontsize=fs)
-                    axs[i, j].plot(poincare_coord[cell, 0], poincare_coord[cell, 1], 'd', c='red')
+                    axs[i, j].plot(poincare_coord[cell, 0],
+                                   poincare_coord[cell, 1],
+                                   'd', c='red')
                 else:
                     axs[i, j].axis('off')
                     axs[i, j].axis('equal')
@@ -302,7 +329,8 @@ class PoincareMaps:
         plt.show()
         plt.close(f)
 
-    def plot_markers(self, data, markesnames, pm_type='rot', file_name=None, fs=8, sc=3):
+    def plot_markers(self, data, markesnames, pm_type='rot',
+                     file_name=None, fs=8, sc=3):
         if pm_type == 'ori':
             poincare_coord = self.coordinates
         elif pm_type == 'rot':
@@ -333,16 +361,20 @@ class PoincareMaps:
                 axs[i, j].axis('off')
                 axs[i, j].axis('equal')            
                 if l < n_plt:
-                    circle = plt.Circle((0, 0), radius=1, color='black', fc="none")
+                    circle = plt.Circle((0, 0), radius=1,
+                                        color='black', fc="none")
                     axs[i, j].add_patch(circle)
                     axs[i, j].plot(0, 0, 'x', c=(0, 0, 0), ms=3)
                     axs[i, j].axis('equal')                 
-                    sc = axs[i, j].scatter(poincare_coord[:, 0], poincare_coord[:, 1], c=data[:, l], s=5, cmap=cm)    
+                    sc = axs[i, j].scatter(poincare_coord[:, 0],
+                                           poincare_coord[:, 1],
+                                           c=data[:, l], s=5, cmap=cm)    
                     axs[i, j].set_title(markesnames[l], fontsize=fs)
                     plt.colorbar(sc,ax=axs[i,j])
 
                     if l == n_plt:
-                        axs[i, j].legend(np.unique(labels), loc='center left', bbox_to_anchor=(1, 0.5), fontsize=fs)
+                        axs[i, j].legend(np.unique(labels), loc='center left',
+                                         bbox_to_anchor=(1, 0.5), fontsize=fs)
                 l+=1
 
         if file_name:
@@ -352,7 +384,8 @@ class PoincareMaps:
         plt.show()
         plt.close(f)
 
-    def plot_markers_radius(self, data, markesnames, labels, file_name=None, fs=8):
+    def plot_markers_radius(self, data, markesnames, labels,
+                            file_name=None, fs=8):
         pm_pseudotime = np.sqrt(self.coordinates_rotated[:,0]**2 + self.coordinates_rotated[:,1]**2)
 
         n_plt = len(markesnames)
@@ -368,7 +401,8 @@ class PoincareMaps:
         if n2 == 1:
             n2 = 2
 
-        fig, axs = plt.subplots(n1, n2, sharex=True, sharey=False, figsize=(n2*4 + 3, n1*4))
+        fig, axs = plt.subplots(n1, n2, sharex=True, sharey=False,
+                                figsize=(n2*4 + 3, n1*4))
 
         i = 0
         for i1 in range(n1):
@@ -381,11 +415,15 @@ class PoincareMaps:
                     marker = markesnames[i]
                     for j, label in enumerate(np.unique(labels)):
                         idx = np.where(labels == label)[0]
-                        axs[i1, i2].plot(pm_pseudotime[idx], data[idx, i], marker='o', markerfacecolor='none', c=self.colors_palette[j], linestyle='', ms=2, label=marker)                
+                        axs[i1, i2].plot(pm_pseudotime[idx], data[idx, i],
+                                         marker='o', markerfacecolor='none',
+                                         c=self.colors_palette[j], linestyle='',
+                                         ms=2, label=marker)                
                     axs[i1, i2].set_title(marker, fontsize=fs)
                     i += 1
                     if i == n_plt:
-                        axs[i1, i2].legend(np.unique(labels), loc='center left', bbox_to_anchor=(1, 0.5), fontsize=fs)
+                        axs[i1, i2].legend(np.unique(labels), loc='center left',
+                                           bbox_to_anchor=(1, 0.5), fontsize=fs)
                 else:
                     axs[i1, i2].axis('off')     
 
@@ -402,7 +440,8 @@ class PoincareMaps:
         plt.close(fig)
 
 
-    def plot_pseudotime(self, data, markesnames, labels, file_name=None, fs=8, idx=[], pm_pseudotime=None,colors_dict=None):        
+    def plot_pseudotime(self, data, markesnames, labels, file_name=None, fs=8,
+                        idx=[], pm_pseudotime=None,colors_dict=None):        
         if pm_pseudotime is None:
             pm_pseudotime = self.distances[self.iroot, :]
 
@@ -431,7 +470,8 @@ class PoincareMaps:
 
 
         pl_size = 2
-        fig, axs = plt.subplots(n1, n2, sharey=False, figsize=(n2*pl_size + 2, n1*pl_size))
+        fig, axs = plt.subplots(n1, n2, sharey=False,
+                                figsize=(n2*pl_size + 2, n1*pl_size))
 
         i = 0               
 
@@ -444,14 +484,19 @@ class PoincareMaps:
                     marker = markesnames[i]
                     for j, label in enumerate(np.unique(labels)):
                         idx = np.where(labels == label)[0]
-                        axs[i1, i2].plot(pm_pseudotime[idx], data[idx, i], marker='o', markerfacecolor='none', c=colors_dict[label], linestyle='', ms=2, label=marker)                
+                        axs[i1, i2].plot(pm_pseudotime[idx], data[idx, i],
+                                         marker='o', markerfacecolor='none',
+                                         c=colors_dict[label], linestyle='',
+                                         ms=2, label=marker)                
                     axs[i1, i2].set_title(marker, fontsize=fs)
                     i += 1
                     if i == n_plt:
-                        axs[i1, i2].legend(np.unique(labels), loc='center left', bbox_to_anchor=(1, 0.5), fontsize=fs)
+                        axs[i1, i2].legend(np.unique(labels), loc='center left',
+                                           bbox_to_anchor=(1, 0.5), fontsize=fs)
                 else:
                     axs[i1, i2].axis('off')
-        axs[i1, i2].legend(np.unique(labels), loc='center left', bbox_to_anchor=(1, 0.5), fontsize=fs)
+        axs[i1, i2].legend(np.unique(labels), loc='center left',
+                           bbox_to_anchor=(1, 0.5), fontsize=fs)
         
         # for ax in axs.flat:
         #   ax.set(xlabel='pseudotime')
@@ -541,7 +586,8 @@ def poincare_linspace(u, v, n_points=175):
 
 
 
-def init_scanpy(data, col_names, head_name, true_labels, fin, k=30, n_pcs=20, computeEmbedding=True):
+def init_scanpy(data, col_names, head_name, true_labels,
+                fin, k=30, n_pcs=20, computeEmbedding=True):
     head_idx = np.where(true_labels == head_name)[0]
     if len(head_idx) > 1:
         D = pairwise_distances(data[head_idx, :], metric='euclidean')
@@ -584,7 +630,8 @@ def init_scanpy(data, col_names, head_name, true_labels, fin, k=30, n_pcs=20, co
     return adata, iroot, louvain_labels
 
 
-def plotBenchamrk(adata, true_labels, fname_benchmark, method='X_draw_graph_fa', pl_size=2.4, n1=3, n2=3, ms=10, fs=9, coldict=None):
+def plotBenchamrk(adata, true_labels, fname_benchmark, method='X_draw_graph_fa',
+                  pl_size=2.4, n1=3, n2=3, ms=10, fs=9, coldict=None):
     labels_order=np.unique(true_labels)
     if coldict is None:
         colors_palette = get_palette(coldict)
@@ -594,8 +641,8 @@ def plotBenchamrk(adata, true_labels, fname_benchmark, method='X_draw_graph_fa',
     ax = plt.gca()
 
     title_name_dict = {'X_pca': 'PCA',
-                        'X_tsne': 'tSNE',
-                        'X_umap': 'UMAP', 
+                       'X_tsne': 'tSNE',
+                       'X_umap': 'UMAP', 
                        'X_diffmap': 'DiffusionMaps', 
                        'X_draw_graph_fa': 'ForceAtlas2'}
 
@@ -631,12 +678,15 @@ def plotBenchamrk(adata, true_labels, fname_benchmark, method='X_draw_graph_fa',
     plt.show()
 
 
-def plotBenchamrks(adata, true_labels, fname_benchmark, pl_size=2.4, n1=2, n2=3, ms=3, fs=9, coldict=None, methods=['X_pca', 'X_umap', 'X_draw_graph_fa']):
+def plotBenchamrks(adata, true_labels, fname_benchmark, pl_size=2.4, n1=2, n2=3,
+                   ms=3, fs=9, coldict=None,
+                   methods=['X_pca', 'X_umap', 'X_draw_graph_fa']):
     labels_order=np.unique(true_labels)
     if coldict is None:
         coldict = dict(zip(labels_order, colors_palette[:len(labels_order)]))
 
-    fig, axs = plt.subplots(n1, n2, sharex=False, sharey=False, figsize=(n2*pl_size, n1*pl_size))
+    fig, axs = plt.subplots(n1, n2, sharex=False, sharey=False,
+                            figsize=(n2*pl_size, n1*pl_size))
     methods=['X_pca', 'X_tsne', 'X_umap', 'X_diffmap', 'X_draw_graph_fa']
     title_name_dict = {'X_pca': 'PCA',
                         'X_tsne': 'tSNE',
@@ -797,7 +847,8 @@ def linear_scale(embeddings):
     return embeddings
 
 
-def get_confusion_matrix(classes, true_labels_oder, true_labels, fname='', title='Confusion matrix'):
+def get_confusion_matrix(classes, true_labels_oder, true_labels,
+                         fname='', title='Confusion matrix'):
     cm = np.zeros([len(np.unique(classes)), len(np.unique(true_labels))])
     for il, l in enumerate(np.unique(classes)):
         idx = np.where(classes == l)[0]
@@ -902,7 +953,10 @@ def get_interpolated_coordinates(coordinates, labels, clusters, distances,
                 if cl_from != cl_to:
                     print(f"{cl_from} to {cl_to}")
                     for i in range(n_starts):
-                        u, v, iu, iv = get_closest(coordinates, distances, clusters, cluster_from=cl_from, cluster_to=cl_to, seed=seed)
+                        u, v, iu, iv = get_closest(coordinates, distances,
+                                                   clusters,
+                                                   cluster_from=cl_from,
+                                                   cluster_to=cl_to, seed=seed)
                         points_list.append([iu, iv])
     
     for p_pair in points_list:        
@@ -929,11 +983,11 @@ def get_time_and_idx(dpt, idx):
 
 
 def plot_dtw_comparison(dpt_true, dpt_po, dpt_fa, dpt_umap, 
-    idx_full, idx_pm, idx_fa, idx_umap, data_full, 
-    x_predicted_po, x_predicted_fa, x_predicted_umap, 
-    col_names, fout,
-    n_plt = 15, n2 = 4, win = 5, pl_size = 2, fs = 9,
-                        lw = 2, cpal = ['#1a9641', '#d7191c', '#2b83ba', '#fdae61']):
+                        idx_full, idx_pm, idx_fa, idx_umap, data_full, 
+                        x_predicted_po, x_predicted_fa, x_predicted_umap, 
+                        col_names, fout, n_plt = 15, n2 = 4, win = 5,
+                        pl_size = 2, fs = 9, lw = 2,
+                        cpal = ['#1a9641', '#d7191c', '#2b83ba', '#fdae61']):
 
     time_true, ix_true = get_time_and_idx(dpt_true, idx_full)
     time_po, ix_po = get_time_and_idx(dpt_po, idx_pm)
@@ -961,7 +1015,8 @@ def plot_dtw_comparison(dpt_true, dpt_po, dpt_fa, dpt_umap,
         n2 = 2
     
 
-    fig, axs = plt.subplots(n1, n2, sharey=False, figsize=(n2*pl_size + 2, n1*pl_size))
+    fig, axs = plt.subplots(n1, n2, sharey=False,
+                            figsize=(n2*pl_size + 2, n1*pl_size))
 
     i = 0
     dtw_po = []
@@ -1027,7 +1082,9 @@ def plot_dtw_comparison(dpt_true, dpt_po, dpt_fa, dpt_umap,
     dtw_fa = np.array(dtw_fa)
     dtw_umap = np.array(dtw_umap)
 
-    axs[i1l, i2l].legend(['True', f'PM: {np.median(dtw_po):.1f}', f'FA2: {np.median(dtw_fa):.1f}', f'UMAP: {np.median(dtw_umap):.1f}'], 
+    axs[i1l, i2l].legend(['True', f'PM: {np.median(dtw_po):.1f}',
+                          f'FA2: {np.median(dtw_fa):.1f}',
+                          f'UMAP: {np.median(dtw_umap):.1f}'], 
                      bbox_to_anchor=(1.4, 0.5), fontsize=fs)
     # axs[i1l, i2l].legend(['True', f'Poincaré', f'ForceAtals2', f'UMAP'], 
     #                  bbox_to_anchor=(1.4, 0.5), fontsize=fs)

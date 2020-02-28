@@ -15,7 +15,8 @@ from torch.utils.data import TensorDataset, DataLoader
 # from tensorboardX import SummaryWriter
 
 
-def train(model, data, optimizer, args, fout=None, labels=None, tb=0, earlystop=0.0, color_dict=None):
+def train(model, data, optimizer, args, fout=None, labels=None, tb=0,
+          earlystop=0.0, color_dict=None):
     loader = DataLoader(data, batch_size=args.batchsize, shuffle=True)
 
     if tb:
@@ -77,7 +78,8 @@ def train(model, data, optimizer, args, fout=None, labels=None, tb=0, earlystop=
                     epoch, np.mean(epoch_loss))
 
                 if epoch > 5:
-                    plotPoincareDisc(np.transpose(d), labels, fout, titlename, color_dict=color_dict)
+                    plotPoincareDisc(np.transpose(d), labels, fout, titlename,
+                                     color_dict=color_dict)
                     np.savetxt(fout + '.csv', d, delimiter=",")
 
                 ball_norm = np.sqrt(d[:, 0] ** 2 + d[:, 1] ** 2)
@@ -99,7 +101,8 @@ def train(model, data, optimizer, args, fout=None, labels=None, tb=0, earlystop=
     print(f"PM computed in {(timeit.default_timer() - t_start):.2f} sec")
 
     delta = abs(epoch_loss[epoch] - epoch_loss[epoch-1])
-    plot_training(epoch_loss, title_name=f'd={delta:.2e}', file_name=fout+'_loss', d1=4, d2=4)
+    plot_training(epoch_loss, title_name=f'd={delta:.2e}',
+                  file_name=fout+'_loss', d1=4, d2=4)
 
     if tb:
         writer.close()

@@ -4,7 +4,7 @@
 # This source code is licensed under the license found in the
 # LICENSE file in the root directory of this source tree.
 #
-fs=9
+fs = 9
 lw = 2
 cpal = ['#4daf4a', '#e41a1c', '#377eb8', '#abd9e9']
 
@@ -62,7 +62,10 @@ def get_interpolated_coordinates(coordinates, labels, clusters, distances,
                 if cl_from != cl_to:
                     print(f"{cl_from} to {cl_to}")
                     for i in range(n_starts):
-                        u, v, iu, iv = get_closest(coordinates, distances, clusters, cluster_from=cl_from, cluster_to=cl_to)
+                        u, v, iu, iv = get_closest(coordinates, distances,
+                                                   clusters,
+                                                   cluster_from=cl_from,
+                                                   cluster_to=cl_to)
                         points_list.append([iu, iv])
     for p_pair in points_list:        
         u = coordinates[p_pair[0]]
@@ -108,7 +111,8 @@ def plot_dtw_comparison(dpt_true, dpt_po, dpt_fa, dpt_umap,
         n2 = 2
     
 
-    fig, axs = plt.subplots(n1, n2, sharey=False, figsize=(n2*pl_size + 2, n1*pl_size))
+    fig, axs = plt.subplots(n1, n2, sharey=False,
+                            figsize=(n2*pl_size + 2, n1*pl_size))
 
     i = 0
     dtw_po = []
@@ -158,8 +162,10 @@ def plot_dtw_comparison(dpt_true, dpt_po, dpt_fa, dpt_umap,
     dtw_fa = np.array(dtw_fa)
     dtw_umap = np.array(dtw_umap)
 
-    axs[i1, i2].legend(['True', f'Poincaré: {np.median(dtw_po):.2f}', f'ForceAtals2: {np.median(dtw_fa):.2f}', f'UMAP: {np.median(dtw_umap):.2f}'], 
-                     bbox_to_anchor=(1.4, 0.5), fontsize=fs)
+    axs[i1, i2].legend(['True', f'Poincaré: {np.median(dtw_po):.2f}',
+                        f'ForceAtals2: {np.median(dtw_fa):.2f}',
+                        f'UMAP: {np.median(dtw_umap):.2f}'], 
+                       bbox_to_anchor=(1.4, 0.5), fontsize=fs)
                      
     # axs[3, 1].legend(['True', f'Poincaré: {dtw_po:.2f}', f'{method}: {dtw_bm:.2f}'], 
     #                  loc='center left', bbox_to_anchor=(1.4, 0.5), fontsize=fs)

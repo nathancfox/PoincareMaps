@@ -54,8 +54,9 @@ def plot_training(loss_func, title_name=None, file_name=None, d1=4, d2=4, fs=11)
 
 
 def plot_poincare_disc(x, labels=None, labels_name='labels', labels_order=None, 
-                       file_name=None, coldict=None,
-                       d1=19, d2=18.0, fs=11, ms=20, col_palette=plt.get_cmap("tab10"), bbox=(1.3, 0.7)):    
+                       file_name=None, coldict=None, d1=19, d2=18.0, fs=11,
+                       ms=20, col_palette=plt.get_cmap("tab10"),
+                       bbox=(1.3, 0.7)):    
 
     idx = np.random.permutation(len(x))
     df = pd.DataFrame(x[idx, :], columns=['pm1', 'pm2'])
